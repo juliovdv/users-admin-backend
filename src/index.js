@@ -3,7 +3,7 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-import usersRouter from "../routes/users.js";
+import usersRouter from "./routes/users.js";
 import { createServer } from "@vercel/node";
 
 const app = express();
@@ -19,4 +19,4 @@ app.use("/users", usersRouter);
 
 // ❗ NO app.listen() — Vercel lo maneja automáticamente
 
-export default createServer(app);
+export default app;
