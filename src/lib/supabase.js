@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import dotenv from "dotenv";
-dotenv.config();
+// import dotenv from "dotenv";
+// dotenv.config();
 
 // Cliente con SERVICE_ROLE_KEY para operaciones de administrador (bypass RLS)
 export const supabase = createClient(
