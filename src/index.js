@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import usersRouter from "./routes/users.js";
-import { createServer } from "@vercel/node";
 
 const app = express();
 
