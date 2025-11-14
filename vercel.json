@@ -3,7 +3,13 @@
   "builds": [
     {
       "src": "api/index.js",
-      "runtime": "nodejs20.x"
+      "use": "node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.js"
     }
   ]
 }
