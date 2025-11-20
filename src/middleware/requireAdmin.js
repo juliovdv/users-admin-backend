@@ -1,19 +1,36 @@
-// middleware/requireAdmin.js
+// src/middleware/requireAdmin.js
 import { supabase } from "../lib/supabase.js";
 
 export const requireAdmin = async (req, res, next) => {
-  const userId = req.user.id;
-  const { data, error } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("auth_user_id", userId)
-    .single();
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      // el usuario no está autenticado correctamente
+      throw { status: 401, message: "Usuario no autenticado" };
+    }
 
-  if (error || !data)
-    return res.status(403).json({ error: "No tienes perfil válido" });
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("auth_user_id", userId)
+      .single();
 
-  if (data.role !== "admin" && data.role !== "super_admin")
-    return res.status(403).json({ error: "No tienes permisos" });
+    if (error) {
+      console.error("Supabase error (requireAdmin):", error.message);
+      throw { status: 500, message: "Error al verificar el rol de usuario" };
+    }
 
-  next();
+    if (!data) {
+      throw { status: 403, message: "No tienes perfil válido" };
+    }
+
+    if (data.role !== "admin" && data.role !== "super_admin") {
+      throw { status: 403, message: "No tienes permisos suficientes" };
+    }
+
+    // Si todo está bien, continúa
+    next();
+  } catch (err) {
+    next(err); // pasa el error al middleware global
+  }
 };
