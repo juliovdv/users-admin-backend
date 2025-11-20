@@ -2,11 +2,12 @@ import express from "express";
 import { supabase } from "../lib/supabase.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 import { requireAdmin } from "../middleware/requireAdmin.js";
+import { validateCreateUser, validateDeleteUser } from "../middleware/validateRequest.js";
 
 const router = express.Router();
 
 // Crear usuario
-router.post("/create", requireAuth, requireAdmin, async (req, res) => {
+router.post("/create", requireAuth, requireAdmin, validateCreateUser, async (req, res) => {
   const { email, password } = req.body;
 
   const { data, error } = await supabase.auth.admin.createUser({
@@ -21,16 +22,16 @@ router.post("/create", requireAuth, requireAdmin, async (req, res) => {
 });
 
 // Listar usuarios (solo admins)
-router.get("/", requireAuth, requireAdmin, async (req, res) => {
-  const { data, error } = await supabase.auth.admin.listUsers();
+// router.get("/", requireAuth, requireAdmin, async (req, res) => {
+//   const { data, error } = await supabase.auth.admin.listUsers();
 
-  if (error) return res.status(400).json({ error });
+//   if (error) return res.status(400).json({ error });
 
-  res.json(data.users);
-});
+//   res.json(data.users);
+// });
 
 // Borrar usuario (si lo necesitás)
-router.delete("/:id", requireAuth, requireAdmin, async (req, res) => {
+router.delete("/:id", requireAuth, requireAdmin, validateDeleteUser, async (req, res) => {
   const userId = req.params.id;
 
   const { error } = await supabase.auth.admin.deleteUser(userId);
