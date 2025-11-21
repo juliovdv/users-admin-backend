@@ -9,10 +9,22 @@ export const requireAdmin = async (req, res, next) => {
       throw { status: 401, message: "Usuario no autenticado" };
     }
 
+    // ✅ Nueva forma
     const { data, error } = await supabase
       .from("profiles")
-      .select("role")
-      .eq("auth_user_id", userId)
+      .select(
+        `
+            id,
+            display_name,
+            profile_roles (
+              role_id,
+              roles (
+                name
+              )
+            )
+          `
+      )
+      .eq("auth_user_id", user.id)
       .single();
 
     if (error) {

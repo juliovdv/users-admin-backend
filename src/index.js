@@ -7,6 +7,7 @@ import usersRouter from "./routes/users.js";
 
 const app = express();
 
+app.set("trust proxy", 1); // confía en el primer proxy (Vercel, Render, etc.)
 // 🛡️ Middlewares globales
 app.use(corsConfig);
 app.use(helmet());
