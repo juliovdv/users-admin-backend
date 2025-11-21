@@ -35,8 +35,10 @@ export const requireAdmin = async (req, res, next) => {
     if (!data) {
       throw { status: 403, message: "No tienes perfil válido" };
     }
+    // extraer los nombres de roles desde el join
+    const roles = data.profile_roles?.map((pr) => pr.roles.name) || [];
 
-    if (data.role !== "admin" && data.role !== "super_admin") {
+    if (!roles.includes("admin") && !roles.includes("super_admin")) {
       throw { status: 403, message: "No tienes permisos suficientes" };
     }
 
