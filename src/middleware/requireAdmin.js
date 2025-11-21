@@ -24,7 +24,7 @@ export const requireAdmin = async (req, res, next) => {
             )
           `
       )
-      .eq("auth_user_id", user.id)
+      .eq("auth_user_id", userId)
       .single();
 
     if (error) {
